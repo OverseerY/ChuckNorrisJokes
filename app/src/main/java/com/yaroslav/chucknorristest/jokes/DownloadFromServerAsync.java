@@ -1,4 +1,4 @@
-package com.yaroslav.chucknorristest.ui.jokes;
+package com.yaroslav.chucknorristest.jokes;
 
 import android.os.AsyncTask;
 import android.util.Log;

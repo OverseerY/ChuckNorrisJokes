@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/navigation_jokes"
-        android:name="com.yaroslav.chucknorristest.ui.jokes.JokesFragment"
+        android:name="com.yaroslav.chucknorristest.jokes.JokesFragment"
         android:label="@string/title_jokes"
         tools:layout="@layout/fragment_jokes" />
 
     <fragment
         android:id="@+id/navigation_web"
-        android:name="com.yaroslav.chucknorristest.ui.web.WebFragment"
+        android:name="com.yaroslav.chucknorristest.web.WebFragment"
         android:label="@string/title_api"
         tools:layout="@layout/fragment_web" />
 </navigation>

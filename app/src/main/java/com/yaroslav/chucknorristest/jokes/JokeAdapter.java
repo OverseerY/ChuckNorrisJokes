@@ -1,4 +1,4 @@
-package com.yaroslav.chucknorristest.ui.jokes;
+package com.yaroslav.chucknorristest.jokes;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +14,14 @@ import java.util.ArrayList;
 
 public class JokeAdapter extends RecyclerView.Adapter<JokeAdapter.ViewHolder> {
     private ArrayList<String> jokes;
-    ItemListener itemListener;
+    IJokeListener IJokeListener;
 
     public JokeAdapter(ArrayList<String> jokes) {
         this.jokes = jokes;
     }
 
-    public void setOnItemClickListener(ItemListener itemListener) {
-        this.itemListener = itemListener;
+    public void setOnItemClickListener(IJokeListener IJokeListener) {
+        this.IJokeListener = IJokeListener;
     }
 
     @NonNull
@@ -36,7 +36,7 @@ public class JokeAdapter extends RecyclerView.Adapter<JokeAdapter.ViewHolder> {
         String joke = jokes.get(position);
         holder.jokeTitle.setText(joke);
         holder.jokeTitle.setOnClickListener(v -> {
-            itemListener.onItemClick(position);
+            IJokeListener.onItemClick(position);
         });
     }
 

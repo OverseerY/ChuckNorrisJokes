@@ -1,8 +1,6 @@
-package com.yaroslav.chucknorristest.ui.jokes;
+package com.yaroslav.chucknorristest.jokes;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +16,6 @@ import com.yaroslav.chucknorristest.R;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
 public class JokesDialogFragment extends DialogFragment {
     public interface JokesCountListener {

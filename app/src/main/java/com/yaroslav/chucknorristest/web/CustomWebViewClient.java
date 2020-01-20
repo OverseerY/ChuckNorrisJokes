@@ -1,4 +1,4 @@
-package com.yaroslav.chucknorristest.ui.web;
+package com.yaroslav.chucknorristest.web;
 
 import android.net.Uri;
 import android.view.View;

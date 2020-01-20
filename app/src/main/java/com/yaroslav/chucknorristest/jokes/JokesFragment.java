@@ -1,6 +1,5 @@
-package com.yaroslav.chucknorristest.ui.jokes;
+package com.yaroslav.chucknorristest.jokes;
 
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -26,11 +24,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 
 public class JokesFragment extends Fragment implements JokesDialogFragment.JokesCountListener {
+    //#region Init
     private static final String SAVED_JOKES = "saved_jokes";
     private static final String SAVED_POSITION = "scroll_position";
 
@@ -46,6 +43,8 @@ public class JokesFragment extends Fragment implements JokesDialogFragment.Jokes
     private ProgressBar progressBar;
 
     private int scrollPosition = 0;
+    
+    //#endregion
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_jokes, container, false);
@@ -117,6 +116,16 @@ public class JokesFragment extends Fragment implements JokesDialogFragment.Jokes
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList(SAVED_JOKES, listOfJokes);
+        if (layoutManager != null && layoutManager instanceof LinearLayoutManager) {
+            scrollPosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+        }
+        outState.putInt(SAVED_POSITION, scrollPosition);
+    }
+
     private int getTotalCountOfJokes() {
         int amount = 0;
         try {
@@ -147,16 +156,6 @@ public class JokesFragment extends Fragment implements JokesDialogFragment.Jokes
             }
             progressBar.setVisibility(View.INVISIBLE);
         }, 200);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putStringArrayList(SAVED_JOKES, listOfJokes);
-        if (layoutManager != null && layoutManager instanceof LinearLayoutManager) {
-            scrollPosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
-        }
-        outState.putInt(SAVED_POSITION, scrollPosition);
     }
 
     private void showSingleJoke(String value) {
