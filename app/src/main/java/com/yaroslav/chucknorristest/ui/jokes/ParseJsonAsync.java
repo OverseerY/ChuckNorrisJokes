@@ -1,0 +1,38 @@
+package com.yaroslav.chucknorristest.ui.jokes;
+
+import android.os.AsyncTask;
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ParseJsonAsync extends AsyncTask<String, Void, List<String>> {
+    private static final String TOP_KEY = "value";
+    private static final String TYPE_KEY = "type";
+    private static final String ITEM_KEY = "joke";
+
+    @Override
+    protected List<String> doInBackground(String... strings) {
+        List<String> listOfJokes = new ArrayList<>();
+        try {
+            JSONObject topLevel = new JSONObject(strings[0]);
+            JSONArray jokesArray = topLevel.getJSONArray(TOP_KEY);
+
+            for (int i = 0; i < jokesArray.length(); i++) {
+                JSONObject nestedObject = jokesArray.getJSONObject(i);
+                String jokeItem = nestedObject.getString(ITEM_KEY);
+                listOfJokes.add(jokeItem);
+            }
+            Log.i("PARSE_JSON", listOfJokes.toString());
+            return listOfJokes;
+        } catch (JSONException e) {
+            Log.e("PARSE_JSON", "JSON Exception: " + "(" + e.getClass() + "): " + e.getMessage());
+        }
+
+        return null;
+    }
+}

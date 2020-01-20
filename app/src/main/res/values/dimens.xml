@@ -3,4 +3,5 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="floating_action_button_margin">72dp</dimen>
+    <dimen name="bottom_nav_bar_margin">52dp</dimen>
 </resources>
