@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,14 +18,16 @@ public class WebFragment extends Fragment /*implements OnBackPressed*/ {
 
     private WebViewModel webViewModel;
     private WebView browser;
+    private ProgressBar progressBar;
     private CustomWebViewClient customWebViewClient;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         webViewModel = ViewModelProviders.of(this).get(WebViewModel.class);
         View root = inflater.inflate(R.layout.fragment_web, container, false);
         browser = root.findViewById(R.id.webview);
+        progressBar = root.findViewById(R.id.webview_progressbar);
 
-        customWebViewClient = new CustomWebViewClient();
+        customWebViewClient = new CustomWebViewClient(progressBar);
         browser.setWebViewClient(customWebViewClient);
         browser.getSettings().setLoadWithOverviewMode(true);
         browser.getSettings().setUseWideViewPort(true);
@@ -32,12 +35,7 @@ public class WebFragment extends Fragment /*implements OnBackPressed*/ {
         browser.getSettings().setDisplayZoomControls(false);
         browser.getSettings().setJavaScriptEnabled(true);
 
-        webViewModel.getURL().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String url) {
-                browser.loadUrl(url);
-            }
-        });
+        webViewModel.getURL().observe(this, url -> browser.loadUrl(url));
 
         return root;
     }
