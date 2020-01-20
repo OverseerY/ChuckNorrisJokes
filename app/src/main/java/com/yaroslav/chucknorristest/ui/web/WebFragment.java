@@ -24,7 +24,9 @@ public class WebFragment extends Fragment /*implements OnBackPressed*/ {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         webViewModel = ViewModelProviders.of(this).get(WebViewModel.class);
         View root = inflater.inflate(R.layout.fragment_web, container, false);
+
         browser = root.findViewById(R.id.webview);
+
         progressBar = root.findViewById(R.id.webview_progressbar);
 
         customWebViewClient = new CustomWebViewClient(progressBar);
@@ -35,24 +37,18 @@ public class WebFragment extends Fragment /*implements OnBackPressed*/ {
         browser.getSettings().setDisplayZoomControls(false);
         browser.getSettings().setJavaScriptEnabled(true);
 
-        webViewModel.getURL().observe(this, url -> browser.loadUrl(url));
+        if (savedInstanceState != null) {
+            browser.restoreState(savedInstanceState);
+        } else {
+            webViewModel.getURL().observe(this, url -> browser.loadUrl(url));
+        }
 
         return root;
     }
 
-    /*
     @Override
-    public void onBackPressed() {
-        if (myWebView.copyBackForwardList().getCurrentIndex() > 0) {
-            myWebView.goBack();
-        } else {
-            getActivity().onBackPressed();
-        }
-        //if (myWebView.canGoBack()) {
-        //    myWebView.goBack();
-        //} else {
-        //    getActivity().onBackPressed();
-        //}
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        browser.saveState(outState);
     }
-    */
 }

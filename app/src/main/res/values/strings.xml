@@ -6,4 +6,5 @@
     <string name="description_refresh">Refresh jokes</string>
     <string name="label_reload">Reload</string>
     <string name="dialog_hint_count">Count of jokes</string>
+    <string name="label_ok">OK</string>
 </resources>

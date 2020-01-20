@@ -8,17 +8,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class ParseJsonAsync extends AsyncTask<String, Void, List<String>> {
+public class ParseJsonAsync extends AsyncTask<String, Void, ArrayList<String>> {
     private static final String TOP_KEY = "value";
     private static final String TYPE_KEY = "type";
     private static final String ITEM_KEY = "joke";
     private static final String SUCCESS = "success";
 
     @Override
-    protected List<String> doInBackground(String... strings) {
-        List<String> listOfJokes = new ArrayList<>();
+    protected ArrayList<String> doInBackground(String... strings) {
+        ArrayList<String> listOfJokes = new ArrayList<>();
         try {
             JSONObject topLevel = new JSONObject(strings[0]);
             String typeOfJsonResponse = topLevel.getString(TYPE_KEY);

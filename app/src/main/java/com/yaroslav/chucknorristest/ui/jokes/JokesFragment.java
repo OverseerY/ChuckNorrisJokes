@@ -1,5 +1,6 @@
 package com.yaroslav.chucknorristest.ui.jokes;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,8 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -23,19 +26,26 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 
 public class JokesFragment extends Fragment implements JokesDialogFragment.JokesCountListener {
+    private static final String SAVED_JOKES = "saved_jokes";
+    private static final String SAVED_POSITION = "scroll_position";
+
     private static final String JOKES_URL = "http://api.icndb.com/jokes/random/";
     private static final String TOTAL_COUNT_URL = "http://api.icndb.com/jokes/count";
 
-    private List<String> listOfJokes;
+    private ArrayList<String> listOfJokes;
     private JokeAdapter jokeAdapter;
     private RecyclerView.ItemDecoration decoration;
     private RecyclerView jokesRecyclerView;
+    private RecyclerView.LayoutManager layoutManager;
     private FloatingActionButton fabRefreshJokes;
     private ProgressBar progressBar;
+
+    private int scrollPosition = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_jokes, container, false);
@@ -46,8 +56,6 @@ public class JokesFragment extends Fragment implements JokesDialogFragment.Jokes
 
         decoration = new DividerItemDecoration(root.getContext(), DividerItemDecoration.VERTICAL);
         jokesRecyclerView.addItemDecoration(decoration);
-
-        listOfJokes = new ArrayList<>();
 
         fabRefreshJokes.setOnClickListener(v -> {
             JokesDialogFragment jokesDialogFragment = new JokesDialogFragment();
@@ -72,6 +80,16 @@ public class JokesFragment extends Fragment implements JokesDialogFragment.Jokes
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
+
+        if (savedInstanceState != null) {
+            listOfJokes = savedInstanceState.getStringArrayList(SAVED_JOKES);
+            scrollPosition = savedInstanceState.getInt(SAVED_POSITION);
+            if (listOfJokes != null && !listOfJokes.isEmpty()) {
+                displayJokes(listOfJokes);
+            }
+        } else {
+            listOfJokes = new ArrayList<>();
+        }
 
         return root;
     }
@@ -113,16 +131,42 @@ public class JokesFragment extends Fragment implements JokesDialogFragment.Jokes
         return amount;
     }
 
-    private void displayJokes(List<String> list) {
+    private void displayJokes(ArrayList<String> list) {
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
             jokeAdapter = new JokeAdapter(list);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+            layoutManager = new LinearLayoutManager(getContext());
             jokesRecyclerView.setLayoutManager(layoutManager);
             jokesRecyclerView.setItemAnimator(new DefaultItemAnimator());
             jokesRecyclerView.setAdapter(jokeAdapter);
+
+            jokeAdapter.setOnItemClickListener(position -> showSingleJoke(list.get(position)));
+
+            if (scrollPosition != 0) {
+                layoutManager.scrollToPosition(scrollPosition);
+            }
             progressBar.setVisibility(View.INVISIBLE);
         }, 200);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList(SAVED_JOKES, listOfJokes);
+        if (layoutManager != null && layoutManager instanceof LinearLayoutManager) {
+            scrollPosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+        }
+        outState.putInt(SAVED_POSITION, scrollPosition);
+    }
+
+    private void showSingleJoke(String value) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage(value)
+                .setPositiveButton(R.string.label_ok, (dialog, which) -> dialog.dismiss())
+                .setCancelable(true);
+
+        AlertDialog closedialog = builder.create();
+        closedialog.show();
     }
 }
 

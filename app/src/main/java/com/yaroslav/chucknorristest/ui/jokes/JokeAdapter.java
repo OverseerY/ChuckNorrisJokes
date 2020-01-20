@@ -10,13 +10,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.yaroslav.chucknorristest.R;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class JokeAdapter extends RecyclerView.Adapter<JokeAdapter.ViewHolder> {
-    private List<String> jokes;
+    private ArrayList<String> jokes;
+    ItemListener itemListener;
 
-    public JokeAdapter(List<String> jokes) {
+    public JokeAdapter(ArrayList<String> jokes) {
         this.jokes = jokes;
+    }
+
+    public void setOnItemClickListener(ItemListener itemListener) {
+        this.itemListener = itemListener;
     }
 
     @NonNull
@@ -30,6 +35,9 @@ public class JokeAdapter extends RecyclerView.Adapter<JokeAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String joke = jokes.get(position);
         holder.jokeTitle.setText(joke);
+        holder.jokeTitle.setOnClickListener(v -> {
+            itemListener.onItemClick(position);
+        });
     }
 
     @Override
